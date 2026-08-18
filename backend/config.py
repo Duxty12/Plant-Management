@@ -12,3 +12,5 @@ DB_NAME = os.getenv("DB_NAME", "greenhouse")
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
+
+FRONTEND_URL="http://localhost:3000"
