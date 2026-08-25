@@ -1,0 +1,91 @@
+## Auth (`/auth`) — no auth required
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/register` | Register a new user |
+| POST | `/auth/login` | Login, returns JWT access token |
+
+## Species (`/species`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/species` | Create a species |
+| GET | `/species` | List all species |
+
+## Suppliers (`/suppliers`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/suppliers` | Create a supplier |
+| GET | `/suppliers` | List all suppliers |
+| PUT | `/suppliers/{supplier_id}` | Update a supplier |
+| DELETE | `/suppliers/{supplier_id}` | Delete a supplier |
+
+## Sections (`/sections`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/sections` | Create a section |
+| GET | `/sections` | List all sections (with env data) |
+| GET | `/sections/{section_id}` | Get one section |
+| PUT | `/sections/{section_id}` | Update a section |
+| DELETE | `/sections/{section_id}` | Delete a section |
+
+## Environment (`/environment`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/environment/records` | Add an environment record |
+| GET | `/environment/records` | List all environment records |
+| GET | `/environment/records/{env_id}` | Get one environment record |
+| GET | `/environment/records/section/{section_id}` | Get records for a section |
+
+## Plants (`/plants`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/plants` | Create a plant |
+| GET | `/plants` | List current user's plants |
+| GET | `/plants/search` | Search plants (query, section, health status) |
+| GET | `/plants/{plant_id}` | Get one plant |
+| PUT | `/plants/{plant_id}` | Update a plant |
+| DELETE | `/plants/{plant_id}` | Delete a plant |
+
+## Care — Waterings & Fertilizer (`/care`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/care/waterings` | Log a watering |
+| GET | `/care/waterings/{plant_id}` | Get watering history for a plant |
+| POST | `/care/fertilizer` | Log fertilizer application |
+| GET | `/care/fertilizer/{plant_id}` | Get fertilizer history for a plant |
+
+## Maintenance (`/maintenance`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/maintenance` | Add a maintenance log |
+| GET | `/maintenance/{plant_id}` | Get maintenance logs for a plant |
+
+## Growth (`/growth`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/growth` | Add a growth record |
+| GET | `/growth/{plant_id}/report` | Get growth report (time series) for a plant |
+
+## Diseases & Treatments (`/diseases`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/diseases` | Create a disease record |
+| POST | `/diseases/assign` | Assign a disease to a plant |
+| GET | `/diseases/plant/{plant_id}` | Get diseases for a plant |
+| POST | `/diseases/treatments` | Add a treatment |
+| GET | `/diseases/{disease_id}/treatments` | Get treatments for a disease |
+
+## Plant Requests (`/requests`)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/requests` | Create a plant request to a supplier |
+| GET | `/requests` | List current user's requests |
+| PUT | `/requests/{request_id}/status` | Update a request's status |
+
+## Dashboard (`/dashboard`)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/dashboard/overview` | Summary stats (total/sick plants, pending requests, recent waterings) |
+
+---
+
+All endpoints except `/auth/register` and `/auth/login` require `Authorization: Bearer <token>`.

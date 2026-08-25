@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --sidebar-width: 250px;
+  --header-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth transitions globally */
+a, button {
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Table base */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Badge/pill base */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Status colors */
+.status-healthy    { background: #dcfce7; color: #15803d; }
+.status-sick       { background: #fee2e2; color: #dc2626; }
+.status-critical   { background: #fee2e2; color: #b91c1c; }
+.status-recovering { background: #fef9c3; color: #a16207; }
+.status-ongoing    { background: #fee2e2; color: #dc2626; }
+.status-treating   { background: #fef3c7; color: #b45309; }
+.status-recovered  { background: #dcfce7; color: #15803d; }
+.status-optimal    { background: #dcfce7; color: #15803d; }
+.status-warning    { background: #fef3c7; color: #b45309; }
+.status-completed  { background: #dcfce7; color: #15803d; }
+.status-clear      { background: #dbeafe; color: #1d4ed8; }
+.status-action     { background: #fee2e2; color: #dc2626; }
