@@ -2,7 +2,6 @@
 
 import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import DashboardLayout from "@/components/DashboardLayout";
 import {
   Leaf,
   ChevronLeft,
@@ -28,6 +27,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -143,7 +143,6 @@ function normalizeStatus(status: string | null | undefined) {
     .toLowerCase();
 }
 
-
 const healthConfig: Record<
   string,
   {
@@ -181,7 +180,6 @@ const recoveryLabel: Record<string, string> = {
   recovered: "Recovered",
 };
 
-
 export default function PlantDetailPage({ params }: PageProps) {
   const { id } = use(params);
 
@@ -189,9 +187,7 @@ export default function PlantDetailPage({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [activeTab, setActiveTab] =
-    useState<Tab>("all");
-
+  const [activeTab, setActiveTab] = useState<Tab>("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -223,9 +219,7 @@ export default function PlantDetailPage({ params }: PageProps) {
 
         if (response.status === 403) {
           setPlant(null);
-          setError(
-            "You do not have permission to view this plant."
-          );
+          setError("You do not have permission to view this plant.");
           return;
         }
 
@@ -244,7 +238,6 @@ export default function PlantDetailPage({ params }: PageProps) {
         }
 
         const data: Plant = await response.json();
-
 
         setPlant(data);
       } catch (err) {
@@ -276,8 +269,7 @@ export default function PlantDetailPage({ params }: PageProps) {
   const growthRecords = plant?.growth_records ?? [];
   const waterings = plant?.waterings ?? [];
   const fertilizers = plant?.fertilizer ?? [];
-  const maintenanceLogs =
-    plant?.maintenance_logs ?? [];
+  const maintenanceLogs = plant?.maintenance_logs ?? [];
   const diseases = plant?.diseases ?? [];
 
   const chartData = useMemo(() => {
@@ -297,19 +289,11 @@ export default function PlantDetailPage({ params }: PageProps) {
   }, [growthRecords]);
 
   const latestHeight = latestGrowth?.height ?? null;
-  const latestLeafCount =
-    latestGrowth?.leaf_count ?? null;
-  const latestStage =
-    latestGrowth?.growth_stage ?? null;
+  const latestLeafCount = latestGrowth?.leaf_count ?? null;
+  const latestStage = latestGrowth?.growth_stage ?? null;
 
-  const healthStatus = normalizeStatus(
-    plant?.health_status
-  );
-
-  const healthInfo = plant
-    ? healthConfig[healthStatus]
-    : null;
-
+  const healthStatus = normalizeStatus(plant?.health_status);
+  const healthInfo = plant ? healthConfig[healthStatus] : null;
 
   if (loading) {
     return (
@@ -326,7 +310,6 @@ export default function PlantDetailPage({ params }: PageProps) {
       </DashboardLayout>
     );
   }
-
 
   if (error || !plant) {
     return (
@@ -351,8 +334,7 @@ export default function PlantDetailPage({ params }: PageProps) {
           </h1>
 
           <p className="mt-2 text-sm text-gray-500">
-            {error ||
-              "The requested plant could not be found."}
+            {error || "The requested plant could not be found."}
           </p>
 
           <Link
@@ -366,7 +348,6 @@ export default function PlantDetailPage({ params }: PageProps) {
       </DashboardLayout>
     );
   }
-
 
   return (
     <DashboardLayout>
@@ -469,9 +450,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                       Acquired:
 
                       <strong className="font-semibold text-gray-800">
-                        {formatDate(
-                          plant.acquire_date
-                        )}
+                        {formatDate(plant.acquire_date)}
                       </strong>
                     </span>
 
@@ -498,7 +477,6 @@ export default function PlantDetailPage({ params }: PageProps) {
             </div>
           </div>
         </div>
-
 
         <div className="mt-6 grid grid-cols-2 gap-4 border-t border-gray-100 pt-6 sm:grid-cols-4">
           <div className="rounded-xl bg-gray-50/80 p-3.5 text-center">
@@ -527,9 +505,7 @@ export default function PlantDetailPage({ params }: PageProps) {
             </p>
 
             <p className="mt-1 text-xl font-bold text-gray-800">
-              {latestHeight !== null
-                ? `${latestHeight} cm`
-                : "—"}
+              {latestHeight !== null ? `${latestHeight} cm` : "—"}
             </p>
           </div>
 
@@ -540,9 +516,7 @@ export default function PlantDetailPage({ params }: PageProps) {
 
             <p
               className={`mt-1 text-xl font-bold ${
-                diseases.length > 0
-                  ? "text-amber-600"
-                  : "text-green-600"
+                diseases.length > 0 ? "text-amber-600" : "text-green-600"
               }`}
             >
               {diseases.length}
@@ -550,7 +524,6 @@ export default function PlantDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-
 
       <div className="mb-6 flex gap-2 overflow-x-auto border-b border-gray-200">
         {[
@@ -580,10 +553,8 @@ export default function PlantDetailPage({ params }: PageProps) {
           <button
             key={tab.key}
             type="button"
-            onClick={() =>
-              setActiveTab(tab.key)
-            }
-            className={`-mb-px whitespace-nowrap border-b-2 px-5 py-3 text-sm font-semibold transition ${
+            onClick={() => setActiveTab(tab.key)}
+            className={`-mb-px whitespace-nowrap border-b-2 px-5 py-3 text-sm font-semibold transition cursor-pointer ${
               activeTab === tab.key
                 ? "border-[#1B3B2C] text-[#1B3B2C]"
                 : "border-transparent text-gray-500 hover:text-gray-700"
@@ -595,9 +566,7 @@ export default function PlantDetailPage({ params }: PageProps) {
       </div>
 
       <div className="space-y-6">
-
-        {(activeTab === "all" ||
-          activeTab === "growth") && (
+        {(activeTab === "all" || activeTab === "growth") && (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
@@ -621,10 +590,7 @@ export default function PlantDetailPage({ params }: PageProps) {
 
             {chartData.length > 0 ? (
               <div className="mb-6">
-                <ResponsiveContainer
-                  width="100%"
-                  height={200}
-                >
+                <ResponsiveContainer width="100%" height={200}>
                   <BarChart
                     data={chartData}
                     margin={{
@@ -666,23 +632,13 @@ export default function PlantDetailPage({ params }: PageProps) {
                       formatter={(value) => [`${value ?? 0} cm`, "Height"]}
                     />
 
-
-                    <Bar
-                      dataKey="height"
-                      radius={[4, 4, 0, 0]}
-                    >
-                      {chartData.map(
-                        (entry, index) => (
-                          <Cell
-                            key={`${entry.date}-${index}`}
-                            fill={
-                              entry.isLatest
-                                ? "#1B3B2C"
-                                : "#86efac"
-                            }
-                          />
-                        )
-                      )}
+                    <Bar dataKey="height" radius={[4, 4, 0, 0]}>
+                      {chartData.map((entry, index) => (
+                        <Cell
+                          key={`${entry.date}-${index}`}
+                          fill={entry.isLatest ? "#1B3B2C" : "#86efac"}
+                        />
+                      ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -715,33 +671,28 @@ export default function PlantDetailPage({ params }: PageProps) {
                   </thead>
 
                   <tbody className="divide-y divide-gray-100">
-                    {growthRecords.map(
-                      (growth) => (
-                        <tr
-                          key={growth.growth_id}
-                          className="transition-colors hover:bg-gray-50/80"
-                        >
-                          <td className="px-4 py-3 text-xs text-gray-600">
-                            {formatDate(
-                              growth.date
-                            )}
-                          </td>
+                    {growthRecords.map((growth) => (
+                      <tr
+                        key={growth.growth_id}
+                        className="transition-colors hover:bg-gray-50/80"
+                      >
+                        <td className="px-4 py-3 text-xs text-gray-600">
+                          {formatDate(growth.date)}
+                        </td>
 
-                          <td className="px-4 py-3 text-sm font-bold text-gray-800">
-                            {growth.height} cm
-                          </td>
+                        <td className="px-4 py-3 text-sm font-bold text-gray-800">
+                          {growth.height} cm
+                        </td>
 
-                          <td className="px-4 py-3 text-xs font-semibold text-gray-700">
-                            {growth.growth_stage ||
-                              "—"}
-                          </td>
+                        <td className="px-4 py-3 text-xs font-semibold text-gray-700">
+                          {growth.growth_stage || "—"}
+                        </td>
 
-                          <td className="px-4 py-3 text-xs font-medium text-gray-700">
-                            {growth.leaf_count}
-                          </td>
-                        </tr>
-                      )
-                    )}
+                        <td className="px-4 py-3 text-xs font-medium text-gray-700">
+                          {growth.leaf_count}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -749,12 +700,8 @@ export default function PlantDetailPage({ params }: PageProps) {
           </div>
         )}
 
-
-        {(activeTab === "all" ||
-          activeTab === "care") && (
+        {(activeTab === "all" || activeTab === "care") && (
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Watering */}
-
             <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-2">
                 <Droplets className="h-5 w-5 text-blue-500" />
@@ -769,10 +716,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-gray-100 bg-gray-50">
-                        {[
-                          "Date",
-                          "Amount (ml)",
-                        ].map((header) => (
+                        {["Date", "Amount (ml)"].map((header) => (
                           <th
                             key={header}
                             className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
@@ -784,26 +728,20 @@ export default function PlantDetailPage({ params }: PageProps) {
                     </thead>
 
                     <tbody className="divide-y divide-gray-100">
-                      {waterings.map(
-                        (watering) => (
-                          <tr
-                            key={
-                              watering.water_id
-                            }
-                            className="hover:bg-gray-50/80"
-                          >
-                            <td className="px-4 py-3 text-xs text-gray-600">
-                              {formatDate(
-                                watering.date
-                              )}
-                            </td>
+                      {waterings.map((watering) => (
+                        <tr
+                          key={watering.water_id}
+                          className="hover:bg-gray-50/80"
+                        >
+                          <td className="px-4 py-3 text-xs text-gray-600">
+                            {formatDate(watering.date)}
+                          </td>
 
-                            <td className="px-4 py-3 text-sm font-bold text-blue-600">
-                              {watering.amount} ml
-                            </td>
-                          </tr>
-                        )
-                      )}
+                          <td className="px-4 py-3 text-sm font-bold text-blue-600">
+                            {watering.amount} ml
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -813,8 +751,6 @@ export default function PlantDetailPage({ params }: PageProps) {
                 </p>
               )}
             </div>
-
-            {/* Fertilization */}
 
             <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-2">
@@ -846,31 +782,24 @@ export default function PlantDetailPage({ params }: PageProps) {
                     </thead>
 
                     <tbody className="divide-y divide-gray-100">
-                      {fertilizers.map(
-                        (fertilizer) => (
-                          <tr
-                            key={
-                              fertilizer.fertilizer_id
-                            }
-                            className="hover:bg-gray-50/80"
-                          >
-                            <td className="px-4 py-3 text-xs text-gray-600">
-                              {formatDate(
-                                fertilizer.date
-                              )}
-                            </td>
+                      {fertilizers.map((fertilizer) => (
+                        <tr
+                          key={fertilizer.fertilizer_id}
+                          className="hover:bg-gray-50/80"
+                        >
+                          <td className="px-4 py-3 text-xs text-gray-600">
+                            {formatDate(fertilizer.date)}
+                          </td>
 
-                            <td className="px-4 py-3 text-sm font-semibold text-gray-800">
-                              {fertilizer.name ||
-                                "—"}
-                            </td>
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-800">
+                            {fertilizer.name || "—"}
+                          </td>
 
-                            <td className="px-4 py-3 text-sm font-bold text-emerald-700">
-                              {fertilizer.amount} ml
-                            </td>
-                          </tr>
-                        )
-                      )}
+                          <td className="px-4 py-3 text-sm font-bold text-emerald-700">
+                            {fertilizer.amount} ml
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -883,8 +812,7 @@ export default function PlantDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        {(activeTab === "all" ||
-          activeTab === "maintenance") && (
+        {(activeTab === "all" || activeTab === "maintenance") && (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center gap-2">
               <Wrench className="h-5 w-5 text-purple-600" />
@@ -915,39 +843,30 @@ export default function PlantDetailPage({ params }: PageProps) {
                   </thead>
 
                   <tbody className="divide-y divide-gray-100">
-                    {maintenanceLogs.map(
-                      (maintenance) => (
-                        <tr
-                          key={
-                            maintenance.log_id
-                          }
-                          className="hover:bg-gray-50/80"
-                        >
-                          <td className="whitespace-nowrap px-4 py-3 text-xs text-gray-600">
-                            {formatDate(
-                              maintenance.date
-                            )}
-                          </td>
+                    {maintenanceLogs.map((maintenance) => (
+                      <tr
+                        key={maintenance.log_id}
+                        className="hover:bg-gray-50/80"
+                      >
+                        <td className="whitespace-nowrap px-4 py-3 text-xs text-gray-600">
+                          {formatDate(maintenance.date)}
+                        </td>
 
-                          <td className="px-4 py-3">
-                            {maintenance.activity_type ? (
-                              <span className="badge bg-purple-50 font-semibold text-purple-700">
-                                {
-                                  maintenance.activity_type
-                                }
-                              </span>
-                            ) : (
-                              "—"
-                            )}
-                          </td>
+                        <td className="px-4 py-3">
+                          {maintenance.activity_type ? (
+                            <span className="badge bg-purple-50 font-semibold text-purple-700">
+                              {maintenance.activity_type}
+                            </span>
+                          ) : (
+                            "—"
+                          )}
+                        </td>
 
-                          <td className="px-4 py-3 text-sm text-gray-700">
-                            {maintenance.note ||
-                              "—"}
-                          </td>
-                        </tr>
-                      )
-                    )}
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          {maintenance.note || "—"}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -959,34 +878,23 @@ export default function PlantDetailPage({ params }: PageProps) {
           </div>
         )}
 
-
-        {(activeTab === "all" ||
-          activeTab === "disease") && (
+        {(activeTab === "all" || activeTab === "disease") && (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center gap-2">
               <Bug className="h-5 w-5 text-red-600" />
 
               <h2 className="text-lg font-bold text-gray-900">
-                Pathology, Diseases &amp; Treatment
-                History
+                Pathology, Diseases &amp; Treatment History
               </h2>
             </div>
 
             {diseases.length > 0 ? (
               <div className="space-y-4">
                 {diseases.map((disease) => {
-                  const status =
-                    normalizeStatus(
-                      disease.recovery_status
-                    );
-
-                  const statusClass =
-                    recoveryConfig[status];
-
+                  const status = normalizeStatus(disease.recovery_status);
+                  const statusClass = recoveryConfig[status];
                   const statusText =
-                    recoveryLabel[status] ||
-                    disease.recovery_status ||
-                    null;
+                    recoveryLabel[status] || disease.recovery_status || null;
 
                   return (
                     <div
@@ -997,8 +905,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                         <div>
                           <div className="flex flex-wrap items-center gap-2.5">
                             <h3 className="text-base font-bold text-gray-900">
-                              {disease.disease_name ||
-                                "Unnamed Disease"}
+                              {disease.disease_name || "Unnamed Disease"}
                             </h3>
 
                             <span className="font-mono text-xs text-gray-400">
@@ -1008,8 +915,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                             {statusText && (
                               <span
                                 className={`badge ${
-                                  statusClass ||
-                                  "bg-gray-100 text-gray-700"
+                                  statusClass || "bg-gray-100 text-gray-700"
                                 }`}
                               >
                                 {statusText}
@@ -1020,9 +926,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                           <p className="mt-1 text-xs text-gray-500">
                             Detected on:{" "}
                             <strong className="text-gray-700">
-                              {formatDate(
-                                disease.detect_date
-                              )}
+                              {formatDate(disease.detect_date)}
                             </strong>
 
                             {disease.heal_date && (
@@ -1030,9 +934,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                                 {" "}
                                 · Healed on:{" "}
                                 <strong className="text-emerald-700">
-                                  {formatDate(
-                                    disease.heal_date
-                                  )}
+                                  {formatDate(disease.heal_date)}
                                 </strong>
                               </>
                             )}
@@ -1043,39 +945,27 @@ export default function PlantDetailPage({ params }: PageProps) {
                       <div className="mt-4 border-t border-gray-200 pt-4">
                         <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700">
                           <Pill className="h-3.5 w-3.5 text-emerald-600" />
-
-                          Applied Treatments (
-                          {disease.treatments?.length ??
-                            0}
-                          )
+                          Applied Treatments ({disease.treatments?.length ?? 0})
                         </p>
 
-                        {disease.treatments &&
-                        disease.treatments.length > 0 ? (
+                        {disease.treatments && disease.treatments.length > 0 ? (
                           <div className="space-y-2">
-                            {disease.treatments.map(
-                              (treatment) => (
-                                <div
-                                  key={
-                                    treatment.treat_id
-                                  }
-                                  className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3 text-xs"
-                                >
-                                  <div>
-                                    <span className="font-semibold text-gray-800">
-                                      {treatment.medicine ||
-                                        "—"}
-                                    </span>
-                                  </div>
-
-                                  <span className="rounded border border-gray-100 bg-gray-50 px-2 py-0.5 font-mono text-gray-500">
-                                    {formatDate(
-                                      treatment.treat_date
-                                    )}
+                            {disease.treatments.map((treatment) => (
+                              <div
+                                key={treatment.treat_id}
+                                className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3 text-xs"
+                              >
+                                <div>
+                                  <span className="font-semibold text-gray-800">
+                                    {treatment.medicine || "—"}
                                   </span>
                                 </div>
-                              )
-                            )}
+
+                                <span className="rounded border border-gray-100 bg-gray-50 px-2 py-0.5 font-mono text-gray-500">
+                                  {formatDate(treatment.treat_date)}
+                                </span>
+                              </div>
+                            ))}
                           </div>
                         ) : (
                           <p className="text-xs italic text-gray-400">
@@ -1092,8 +982,7 @@ export default function PlantDetailPage({ params }: PageProps) {
                 <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-gray-400" />
 
                 <p className="text-sm font-medium">
-                  No disease records available for
-                  this plant.
+                  No disease records available for this plant.
                 </p>
               </div>
             )}

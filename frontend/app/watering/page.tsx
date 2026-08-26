@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import { Droplets, Sparkles, Trash2 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 type Plant = {
   plant_id: string;
@@ -338,7 +338,7 @@ export default function WateringPage() {
       <div className="flex gap-2 border-b border-gray-200 mb-6">
         <button
           onClick={() => setActiveTab("watering")}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold transition border-b-2 -mb-px ${
+          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold transition border-b-2 -mb-px cursor-pointer ${
             activeTab === "watering"
               ? "border-[#1B3B2C] text-[#1B3B2C]"
               : "border-transparent text-gray-500 hover:text-gray-700"
@@ -350,7 +350,7 @@ export default function WateringPage() {
 
         <button
           onClick={() => setActiveTab("fertilization")}
-          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold transition border-b-2 -mb-px ${
+          className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold transition border-b-2 -mb-px cursor-pointer ${
             activeTab === "fertilization"
               ? "border-[#1B3B2C] text-[#1B3B2C]"
               : "border-transparent text-gray-500 hover:text-gray-700"
@@ -392,7 +392,7 @@ export default function WateringPage() {
                       plant_id: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   required
                   disabled={loading || plants.length === 0}
                 >
@@ -452,7 +452,7 @@ export default function WateringPage() {
               <button
                 type="submit"
                 disabled={saving || loading || plants.length === 0}
-                className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm"
+                className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm cursor-pointer"
               >
                 {saving ? "Saving..." : "Save Watering Log"}
               </button>
@@ -472,7 +472,7 @@ export default function WateringPage() {
                       plant_id: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   required
                   disabled={loading || plants.length === 0}
                 >
@@ -552,7 +552,7 @@ export default function WateringPage() {
               <button
                 type="submit"
                 disabled={saving || loading || plants.length === 0}
-                className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm"
+                className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm cursor-pointer"
               >
                 {saving ? "Saving..." : "Save Fertilization Log"}
               </button>
@@ -587,7 +587,7 @@ export default function WateringPage() {
               <select
                 value={plantFilter}
                 onChange={(e) => setPlantFilter(e.target.value)}
-                className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-200 bg-white"
+                className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-200 bg-white cursor-pointer"
               >
                 <option value="all">All Plants</option>
 
@@ -605,7 +605,7 @@ export default function WateringPage() {
                     setPlantFilter("all");
                     setSearch("");
                   }}
-                  className="text-xs text-gray-400 hover:text-gray-600 underline"
+                  className="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer"
                 >
                   Reset
                 </button>
@@ -668,7 +668,7 @@ export default function WateringPage() {
                             onClick={() =>
                               handleDeleteWatering(record.water_id)
                             }
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition"
+                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition cursor-pointer"
                             title="Delete entry"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -736,7 +736,7 @@ export default function WateringPage() {
                           onClick={() =>
                             handleDeleteFertilizer(record.fertilizer_id)
                           }
-                          className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition"
+                          className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition cursor-pointer"
                           title="Delete entry"
                         >
                           <Trash2 className="w-3.5 h-3.5" />

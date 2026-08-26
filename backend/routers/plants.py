@@ -1,8 +1,8 @@
-import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from backend.database import get_db, run_query
 from backend.schemas import PlantIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_id
 
 router = APIRouter(
     prefix="/plants",
@@ -106,7 +106,7 @@ def create_plant(
                 detail="Section not found or not owned by you"
             )
 
-    plant_id = str(uuid.uuid4())
+    plant_id = generate_id(conn, "plants", "plant_id", "PT-", pad=4)
 
     run_query(
         conn,

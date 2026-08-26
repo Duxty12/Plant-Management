@@ -1,8 +1,9 @@
-import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from backend.database import get_db, run_query
 from backend.schemas import WateringIn, FertilizerIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_id
+
 
 router = APIRouter(
     prefix="/care",
@@ -69,7 +70,7 @@ def add_watering(
             detail="Plant not found or not owned by you"
         )
 
-    water_id = str(uuid.uuid4())
+    water_id = generate_id(conn, "waterings", "water_id", "WAT-", pad=4)
 
     run_query(
         conn,
@@ -197,7 +198,7 @@ def add_fertilizer(
             detail="Plant not found or not owned by you"
         )
 
-    fertilizer_id = str(uuid.uuid4())
+    fertilizer_id = generate_id(conn, "fertilizer", "fertilizer_id", "FRT-", pad=4)
 
     run_query(
         conn,

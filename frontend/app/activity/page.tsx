@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import {
   Droplets,
   TrendingUp,
@@ -10,6 +9,7 @@ import {
   Sparkles,
   ChevronDown,
 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -143,8 +143,7 @@ interface TimelineEvent {
 export default function ActivityPage() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [selectedPlant, setSelectedPlant] = useState("");
-  const [activeFilter, setActiveFilter] =
-    useState<FilterType>("All Events");
+  const [activeFilter, setActiveFilter] = useState<FilterType>("All Events");
   const [search, setSearch] = useState("");
   const [loadingPlants, setLoadingPlants] = useState(true);
   const [loadingPlant, setLoadingPlant] = useState(false);
@@ -190,9 +189,7 @@ export default function ActivityPage() {
         console.error("Failed to fetch plants:", err);
 
         setError(
-          err instanceof Error
-            ? err.message
-            : "Failed to load plants."
+          err instanceof Error ? err.message : "Failed to load plants."
         );
       } finally {
         setLoadingPlants(false);
@@ -239,9 +236,7 @@ export default function ActivityPage() {
 
         setPlants((currentPlants) =>
           currentPlants.map((plant) =>
-            plant.plant_id === data.plant_id
-              ? data
-              : plant
+            plant.plant_id === data.plant_id ? data : plant
           )
         );
       } catch (err) {
@@ -261,10 +256,7 @@ export default function ActivityPage() {
   }, [selectedPlant]);
 
   const plant = useMemo(
-    () =>
-      plants.find(
-        (item) => item.plant_id === selectedPlant
-      ) ?? null,
+    () => plants.find((item) => item.plant_id === selectedPlant) ?? null,
     [plants, selectedPlant]
   );
 
@@ -314,15 +306,11 @@ export default function ActivityPage() {
     });
 
     plant.diseases?.forEach((disease) => {
-      const recoveryStatus =
-        disease.recovery_status?.toLowerCase();
+      const recoveryStatus = disease.recovery_status?.toLowerCase();
 
       let details = `Status: ${disease.recovery_status}`;
 
-      if (
-        recoveryStatus === "recovered" &&
-        disease.heal_date
-      ) {
+      if (recoveryStatus === "recovered" && disease.heal_date) {
         details = `Recovered on ${disease.heal_date}`;
       }
 
@@ -336,10 +324,7 @@ export default function ActivityPage() {
     });
 
     return timeline.sort((a, b) => {
-      return (
-        new Date(b.date).getTime() -
-        new Date(a.date).getTime()
-      );
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
   }, [plant]);
 
@@ -356,15 +341,9 @@ export default function ActivityPage() {
       }
 
       const matchSearch =
-        event.title
-          .toLowerCase()
-          .includes(normalizedSearch) ||
-        event.details
-          .toLowerCase()
-          .includes(normalizedSearch) ||
-        event.date
-          .toLowerCase()
-          .includes(normalizedSearch);
+        event.title.toLowerCase().includes(normalizedSearch) ||
+        event.details.toLowerCase().includes(normalizedSearch) ||
+        event.date.toLowerCase().includes(normalizedSearch);
 
       return matchType && matchSearch;
     });
@@ -376,9 +355,7 @@ export default function ActivityPage() {
         <div className="flex min-h-[400px] items-center justify-center">
           <div className="text-center">
             <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#1B3B2C]" />
-            <p className="text-sm text-gray-500">
-              Loading plants...
-            </p>
+            <p className="text-sm text-gray-500">Loading plants...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -390,9 +367,7 @@ export default function ActivityPage() {
       <DashboardLayout>
         <div className="flex min-h-[400px] items-center justify-center">
           <div className="rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
-            <p className="text-sm font-semibold text-red-600">
-              {error}
-            </p>
+            <p className="text-sm font-semibold text-red-600">{error}</p>
           </div>
         </div>
       </DashboardLayout>
@@ -439,10 +414,7 @@ export default function ActivityPage() {
             className="min-w-[260px] cursor-pointer appearance-none rounded-xl border border-gray-200 bg-white py-2.5 pl-4 pr-10 text-sm font-semibold text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-200"
           >
             {plants.map((item) => (
-              <option
-                key={item.plant_id}
-                value={item.plant_id}
-              >
+              <option key={item.plant_id} value={item.plant_id}>
                 {item.common_name} · {item.plant_id}
               </option>
             ))}
@@ -464,11 +436,9 @@ export default function ActivityPage() {
                 {plant.common_name}
               </p>
 
-              <p className="mt-0.5 text-xs font-mono text-gray-400">
+              <p className="mt-0.5 font-mono text-xs text-gray-400">
                 {plant.plant_id}
-                {plant.section_name
-                  ? ` · ${plant.section_name}`
-                  : ""}
+                {plant.section_name ? ` · ${plant.section_name}` : ""}
               </p>
             </div>
           </div>
@@ -513,9 +483,7 @@ export default function ActivityPage() {
           <div className="flex min-h-[250px] items-center justify-center">
             <div className="text-center">
               <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#1B3B2C]" />
-              <p className="text-sm text-gray-500">
-                Loading activity...
-              </p>
+              <p className="text-sm text-gray-500">Loading activity...</p>
             </div>
           </div>
         ) : filtered.length > 0 ? (
@@ -532,9 +500,7 @@ export default function ActivityPage() {
                   <div
                     className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${config.bg}`}
                   >
-                    <Icon
-                      className={`h-4 w-4 ${config.color}`}
-                    />
+                    <Icon className={`h-4 w-4 ${config.color}`} />
                   </div>
 
                   <div className="flex flex-1 flex-col justify-between gap-1 sm:flex-row sm:items-center">
@@ -548,7 +514,7 @@ export default function ActivityPage() {
                       </span>
                     </div>
 
-                    <span className="self-start whitespace-nowrap rounded-md bg-gray-100 px-2.5 py-1 text-xs font-mono text-gray-500 sm:self-auto">
+                    <span className="self-start whitespace-nowrap rounded-md bg-gray-100 px-2.5 py-1 font-mono text-xs text-gray-500 sm:self-auto">
                       {event.date}
                     </span>
                   </div>

@@ -1,4 +1,3 @@
-import uuid
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from backend.database import get_db, run_query
@@ -6,6 +5,7 @@ from backend.schemas import UserRegister, Token
 from backend.security import hash_password, verify_password, create_access_token
 from backend.dependencies import get_current_user
 from backend.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from backend.id_generator import generate_id
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -16,7 +16,8 @@ def register(user: UserRegister, conn=Depends(get_db)):
     if existing:
         raise HTTPException(400, "Username or email already registered")
 
-    user_id = str(uuid.uuid4())
+    user_id = generate_id(conn, "users", "user_id", "USR-", pad=4)
+
     run_query(
         conn,
         "INSERT INTO users (user_id, username, email, password) VALUES (%s,%s,%s,%s)",

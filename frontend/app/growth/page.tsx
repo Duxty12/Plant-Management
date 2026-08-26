@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
-import {
-  Search,
-  TrendingUp,
-} from "lucide-react";
+import { Search, TrendingUp } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -16,6 +12,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import DashboardLayout from "@/components/DashboardLayout";
 
 type Plant = {
   plant_id: string;
@@ -251,7 +248,7 @@ export default function GrowthPage() {
                     plant_id: e.target.value,
                   })
                 }
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                 required
                 disabled={loading || plants.length === 0}
               >
@@ -324,7 +321,7 @@ export default function GrowthPage() {
                       growth_stage: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                 >
                   {[
                     "Seedling",
@@ -365,7 +362,7 @@ export default function GrowthPage() {
             <button
               type="submit"
               disabled={saving || loading || plants.length === 0}
-              className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm"
+              className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm cursor-pointer"
             >
               {saving ? "Saving..." : "Save Growth Record"}
             </button>
@@ -396,7 +393,7 @@ export default function GrowthPage() {
                   onChange={(e) =>
                     setSelectedPlantChart(e.target.value)
                   }
-                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-[#1B3B2C] bg-green-50/70 focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-semibold text-[#1B3B2C] bg-green-50/70 focus:outline-none focus:ring-2 focus:ring-green-200 cursor-pointer"
                   disabled={loading || plants.length === 0}
                 >
                   {plants.length === 0 ? (
@@ -498,7 +495,7 @@ export default function GrowthPage() {
                   onChange={(e) =>
                     setTablePlantFilter(e.target.value)
                   }
-                  className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200 cursor-pointer"
                   disabled={loading || plants.length === 0}
                 >
                   <option value="all">All Plants</option>

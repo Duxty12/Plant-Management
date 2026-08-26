@@ -1,8 +1,8 @@
-import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from backend.database import get_db, run_query
 from backend.schemas import GrowthRecordIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_year_id
 
 router = APIRouter(
     prefix="/growth",
@@ -71,7 +71,7 @@ def add_growth(
             detail="Plant not found or not owned by you"
         )
 
-    growth_id = str(uuid.uuid4())
+    growth_id = generate_year_id(conn, "growth_records", "growth_id", "GRW-", year=g.date.year, pad=4)
 
     run_query(
         conn,

@@ -1,10 +1,8 @@
-import uuid
-
 from fastapi import APIRouter, Depends, HTTPException
-
 from backend.database import get_db, run_query
 from backend.schemas import SpeciesIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_id
 
 
 router = APIRouter(
@@ -42,7 +40,7 @@ def create_species(
     conn=Depends(get_db),
     user=Depends(get_current_user)
 ):
-    species_id = str(uuid.uuid4())
+    species_id = generate_id(conn, "species", "species_id", "SPC-", pad=4)
 
     run_query(
         conn,

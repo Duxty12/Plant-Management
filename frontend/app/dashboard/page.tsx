@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import DashboardLayout from "@/components/DashboardLayout";
 import {
   Leaf,
   Heart,
@@ -12,6 +11,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -47,12 +47,8 @@ interface RecentActivity {
 }
 
 export default function DashboardPage() {
-  const [dashboard, setDashboard] =
-    useState<DashboardData | null>(null);
-
-  const [recentActivities, setRecentActivities] =
-    useState<RecentActivity[]>([]);
-
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -64,17 +60,14 @@ export default function DashboardPage() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `${API_URL}/dashboard/overview`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-            },
-            cache: "no-store",
-          }
-        );
+        const response = await fetch(`${API_URL}/dashboard/overview`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+          },
+          cache: "no-store",
+        });
 
         if (response.status === 401) {
           throw new Error("You are not authenticated.");
@@ -86,8 +79,7 @@ export default function DashboardPage() {
           );
         }
 
-        const data: DashboardData =
-          await response.json();
+        const data: DashboardData = await response.json();
 
         if (!mounted) {
           return;
@@ -96,14 +88,10 @@ export default function DashboardPage() {
         setDashboard({
           total_plants: Number(data.total_plants || 0),
           sick_plants: Number(data.sick_plants || 0),
-          recent_waterings:
-            data.recent_waterings || [],
+          recent_waterings: data.recent_waterings || [],
         });
       } catch (err) {
-        console.error(
-          "Failed to fetch dashboard:",
-          err
-        );
+        console.error("Failed to fetch dashboard:", err);
 
         if (mounted) {
           setError(
@@ -127,10 +115,7 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    if (
-      !dashboard ||
-      dashboard.recent_waterings.length === 0
-    ) {
+    if (!dashboard || dashboard.recent_waterings.length === 0) {
       setRecentActivities([]);
       return;
     }
@@ -141,18 +126,14 @@ export default function DashboardPage() {
       try {
         const uniquePlantIds = Array.from(
           new Set(
-            dashboard.recent_waterings.map(
-              (watering) => watering.plant_id
-            )
+            dashboard.recent_waterings.map((watering) => watering.plant_id)
           )
         );
 
         const results = await Promise.all(
           uniquePlantIds.map(async (plantId) => {
             const response = await fetch(
-              `${API_URL}/plants/${encodeURIComponent(
-                plantId
-              )}`,
+              `${API_URL}/plants/${encodeURIComponent(plantId)}`,
               {
                 method: "GET",
                 credentials: "include",
@@ -167,9 +148,7 @@ export default function DashboardPage() {
               return null;
             }
 
-            const plant: PlantData =
-              await response.json();
-
+            const plant: PlantData = await response.json();
             return plant;
           })
         );
@@ -186,49 +165,37 @@ export default function DashboardPage() {
           }
         });
 
-        const activities: RecentActivity[] =
-          dashboard.recent_waterings.map(
-            (watering) => {
-              const plant = plantMap.get(
-                watering.plant_id
-              );
+        const activities: RecentActivity[] = dashboard.recent_waterings.map(
+          (watering) => {
+            const plant = plantMap.get(watering.plant_id);
 
-              return {
-                water_id: watering.water_id,
-                date: watering.date,
-                plant_id: watering.plant_id,
-                plant_name:
-                  plant?.common_name ||
-                  watering.plant_id,
-                scientific_name:
-                  plant?.scientific_name || "",
-                amount: Number(watering.amount || 0),
-                section_name:
-                  plant?.section_name || null,
-              };
-            }
-          );
+            return {
+              water_id: watering.water_id,
+              date: watering.date,
+              plant_id: watering.plant_id,
+              plant_name: plant?.common_name || watering.plant_id,
+              scientific_name: plant?.scientific_name || "",
+              amount: Number(watering.amount || 0),
+              section_name: plant?.section_name || null,
+            };
+          }
+        );
 
         setRecentActivities(activities);
       } catch (err) {
-        console.error(
-          "Failed to fetch plant details:",
-          err
-        );
+        console.error("Failed to fetch plant details:", err);
 
         if (mounted) {
           setRecentActivities(
-            dashboard.recent_waterings.map(
-              (watering) => ({
-                water_id: watering.water_id,
-                date: watering.date,
-                plant_id: watering.plant_id,
-                plant_name: watering.plant_id,
-                scientific_name: "",
-                amount: Number(watering.amount || 0),
-                section_name: null,
-              })
-            )
+            dashboard.recent_waterings.map((watering) => ({
+              water_id: watering.water_id,
+              date: watering.date,
+              plant_id: watering.plant_id,
+              plant_name: watering.plant_id,
+              scientific_name: "",
+              amount: Number(watering.amount || 0),
+              section_name: null,
+            }))
           );
         }
       }
@@ -246,40 +213,23 @@ export default function DashboardPage() {
       return 0;
     }
 
-    return Math.max(
-      dashboard.total_plants -
-        dashboard.sick_plants,
-      0
-    );
+    return Math.max(dashboard.total_plants - dashboard.sick_plants, 0);
   }, [dashboard]);
 
   const healthyPercentage = useMemo(() => {
-    if (
-      !dashboard ||
-      dashboard.total_plants === 0
-    ) {
+    if (!dashboard || dashboard.total_plants === 0) {
       return 0;
     }
 
-    return Math.round(
-      (healthyPlants / dashboard.total_plants) *
-        100
-    );
+    return Math.round((healthyPlants / dashboard.total_plants) * 100);
   }, [dashboard, healthyPlants]);
 
   const sickPercentage = useMemo(() => {
-    if (
-      !dashboard ||
-      dashboard.total_plants === 0
-    ) {
+    if (!dashboard || dashboard.total_plants === 0) {
       return 0;
     }
 
-    return Math.round(
-      (dashboard.sick_plants /
-        dashboard.total_plants) *
-        100
-    );
+    return Math.round((dashboard.sick_plants / dashboard.total_plants) * 100);
   }, [dashboard]);
 
   if (loading) {
@@ -288,10 +238,7 @@ export default function DashboardPage() {
         <div className="flex min-h-[500px] items-center justify-center">
           <div className="text-center">
             <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#1B3B2C]" />
-
-            <p className="text-sm text-gray-500">
-              Loading dashboard...
-            </p>
+            <p className="text-sm text-gray-500">Loading dashboard...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -312,14 +259,11 @@ export default function DashboardPage() {
             </h1>
 
             <p className="mt-2 text-sm text-gray-500">
-              {error ||
-                "Dashboard data is unavailable."}
+              {error || "Dashboard data is unavailable."}
             </p>
 
             <button
-              onClick={() =>
-                window.location.reload()
-              }
+              onClick={() => window.location.reload()}
               className="mt-6 rounded-lg bg-[#1B3B2C] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#153024]"
             >
               Try Again
@@ -338,8 +282,7 @@ export default function DashboardPage() {
         </h1>
 
         <p className="mt-1 text-sm text-gray-500">
-          Real-time metrics and environmental status
-          for your plants.
+          Real-time metrics and environmental status for your plants.
         </p>
       </div>
 
@@ -477,35 +420,33 @@ export default function DashboardPage() {
 
           {dashboard.recent_waterings.length > 0 ? (
             <div className="space-y-3">
-              {recentActivities.map(
-                (activity) => (
-                  <div
-                    key={activity.water_id}
-                    className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/70 p-3"
-                  >
-                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                      <Droplets className="h-4 w-4 text-blue-600" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-gray-800">
-                        {activity.plant_name}
-                      </p>
-
-                      <p className="text-xs text-gray-500">
-                        {activity.amount} ml
-                        {activity.section_name
-                          ? ` · ${activity.section_name}`
-                          : ""}
-                      </p>
-                    </div>
-
-                    <span className="whitespace-nowrap rounded-md bg-white px-2 py-1 font-mono text-xs text-gray-500">
-                      {activity.date}
-                    </span>
+              {recentActivities.map((activity) => (
+                <div
+                  key={activity.water_id}
+                  className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/70 p-3"
+                >
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                    <Droplets className="h-4 w-4 text-blue-600" />
                   </div>
-                )
-              )}
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-gray-800">
+                      {activity.plant_name}
+                    </p>
+
+                    <p className="text-xs text-gray-500">
+                      {activity.amount} ml
+                      {activity.section_name
+                        ? ` · ${activity.section_name}`
+                        : ""}
+                    </p>
+                  </div>
+
+                  <span className="whitespace-nowrap rounded-md bg-white px-2 py-1 font-mono text-xs text-gray-500">
+                    {activity.date}
+                  </span>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="py-10 text-center">
@@ -564,51 +505,49 @@ export default function DashboardPage() {
               </thead>
 
               <tbody className="divide-y divide-gray-100">
-                {recentActivities.map(
-                  (activity) => (
-                    <tr
-                      key={activity.water_id}
-                      className="transition-colors hover:bg-gray-50"
-                    >
-                      <td className="whitespace-nowrap px-5 py-3.5 text-xs font-medium text-gray-500">
-                        {activity.date}
-                      </td>
+                {recentActivities.map((activity) => (
+                  <tr
+                    key={activity.water_id}
+                    className="transition-colors hover:bg-gray-50"
+                  >
+                    <td className="whitespace-nowrap px-5 py-3.5 text-xs font-medium text-gray-500">
+                      {activity.date}
+                    </td>
 
-                      <td className="px-5 py-3.5">
-                        <p className="text-sm font-semibold text-gray-800">
-                          {activity.plant_name}
+                    <td className="px-5 py-3.5">
+                      <p className="text-sm font-semibold text-gray-800">
+                        {activity.plant_name}
+                      </p>
+
+                      {activity.scientific_name && (
+                        <p className="text-xs italic text-gray-500">
+                          {activity.scientific_name}
                         </p>
+                      )}
+                    </td>
 
-                        {activity.scientific_name && (
-                          <p className="text-xs italic text-gray-500">
-                            {activity.scientific_name}
-                          </p>
-                        )}
-                      </td>
+                    <td className="px-5 py-3.5">
+                      <span className="font-mono text-xs text-gray-500">
+                        {activity.plant_id}
+                      </span>
+                    </td>
 
-                      <td className="px-5 py-3.5">
-                        <span className="font-mono text-xs text-gray-500">
-                          {activity.plant_id}
-                        </span>
-                      </td>
+                    <td className="px-5 py-3.5">
+                      <span className="flex items-center gap-1.5 text-sm font-medium text-blue-700">
+                        <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                        Watering
+                      </span>
+                    </td>
 
-                      <td className="px-5 py-3.5">
-                        <span className="flex items-center gap-1.5 text-sm font-medium text-blue-700">
-                          <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                          Watering
-                        </span>
-                      </td>
+                    <td className="px-5 py-3.5 text-sm font-bold text-blue-600">
+                      {activity.amount} ml
+                    </td>
 
-                      <td className="px-5 py-3.5 text-sm font-bold text-blue-600">
-                        {activity.amount} ml
-                      </td>
-
-                      <td className="px-5 py-3.5 text-xs text-gray-600">
-                        {activity.section_name || "—"}
-                      </td>
-                    </tr>
-                  )
-                )}
+                    <td className="px-5 py-3.5 text-xs text-gray-600">
+                      {activity.section_name || "—"}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           ) : (

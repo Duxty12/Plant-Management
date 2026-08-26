@@ -31,7 +31,6 @@ const navItems = [
   { label: "Maintenance", icon: Wrench, href: "/maintenance" },
   { label: "Suppliers", icon: Truck, href: "/suppliers" },
   { label: "Activity Timeline", icon: Activity, href: "/activity" },
-  { label: "Request Plant", icon: PackagePlus, href: "/request" },
 ];
 
 export default function Sidebar() {
@@ -62,11 +61,10 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                active
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${active
                   ? "bg-[#2d5c45] text-white shadow-sm"
                   : "text-green-200/85 hover:bg-[#243f30] hover:text-white"
-              }`}
+                }`}
             >
               <item.icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-green-400" : "text-green-400/70"}`} />
               <span className="truncate">{item.label}</span>

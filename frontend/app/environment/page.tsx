@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import {
   Thermometer,
   Droplets,
@@ -15,6 +14,7 @@ import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -500,7 +500,7 @@ export default function EnvironmentPage() {
 
                     <select
                       {...register("section_id")}
-                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                     >
                       <option value="">
                         Select a section
@@ -606,7 +606,7 @@ export default function EnvironmentPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-[#1B3B2C] hover:bg-[#14532d] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {saving && (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -653,7 +653,7 @@ export default function EnvironmentPage() {
                       onChange={(e) =>
                         setSelectedSection(e.target.value)
                       }
-                      className="px-2 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200"
+                      className="px-2 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200 cursor-pointer"
                     >
                       <option value="all">
                         All Sections
@@ -680,7 +680,7 @@ export default function EnvironmentPage() {
                           e.target.value as typeof sortBy
                         )
                       }
-                      className="px-2 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200"
+                      className="px-2 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200 cursor-pointer"
                     >
                       <option value="date_desc">
                         Date: Newest

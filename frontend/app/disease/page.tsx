@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import {
   Bug,
   Plus,
@@ -14,6 +13,7 @@ import {
   Pill,
   PlusCircle,
 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 type Plant = {
   plant_id: string;
@@ -369,7 +369,7 @@ export default function DiseasePage() {
         <button
           onClick={() => setShowAddModal(true)}
           disabled={plants.length === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-[#1B3B2C] hover:bg-[#14532d] disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-[#1B3B2C] hover:bg-[#14532d] disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition shadow-sm cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Add Disease Record
@@ -442,7 +442,7 @@ export default function DiseasePage() {
               </p>
             </div>
           ) : (
-            <table>
+            <table className="w-full">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
                   {[
@@ -527,7 +527,7 @@ export default function DiseasePage() {
                             onClick={() =>
                               setActiveTreatmentDisease(disease)
                             }
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg text-xs font-semibold transition"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg text-xs font-semibold transition cursor-pointer"
                           >
                             <Stethoscope className="w-3.5 h-3.5 text-amber-600" />
                             Treatment Details (
@@ -538,7 +538,7 @@ export default function DiseasePage() {
                             onClick={() =>
                               setActiveTreatmentDisease(disease)
                             }
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-semibold transition"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-semibold transition cursor-pointer"
                           >
                             <History className="w-3.5 h-3.5 text-emerald-600" />
                             Treatment History (
@@ -549,7 +549,7 @@ export default function DiseasePage() {
                             onClick={() =>
                               setActiveTreatmentDisease(disease)
                             }
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-medium transition"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-medium transition cursor-pointer"
                           >
                             <PlusCircle className="w-3.5 h-3.5 text-gray-500" />
                             {hasTreatments
@@ -564,7 +564,7 @@ export default function DiseasePage() {
                           <button
                             onClick={() => handleOpenEdit(disease)}
                             title="Edit Disease Record"
-                            className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition"
+                            className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition cursor-pointer"
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
@@ -574,7 +574,7 @@ export default function DiseasePage() {
                               handleDeleteDisease(disease.disease_id)
                             }
                             title="Delete Disease Record"
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition"
+                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -604,7 +604,7 @@ export default function DiseasePage() {
 
               <button
                 onClick={() => setShowAddModal(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -644,7 +644,7 @@ export default function DiseasePage() {
                       plant_id: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   required
                 >
                   {plants.map((plant) => (
@@ -694,7 +694,7 @@ export default function DiseasePage() {
                           | "recovered",
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   >
                     <option value="ongoing">Ongoing (Active)</option>
                     <option value="treating">Under Treatment</option>
@@ -728,14 +728,14 @@ export default function DiseasePage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition"
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm"
+                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm cursor-pointer"
                 >
                   Save Record
                 </button>
@@ -761,7 +761,7 @@ export default function DiseasePage() {
 
               <button
                 onClick={() => setEditingDisease(null)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -800,7 +800,7 @@ export default function DiseasePage() {
                       plant_id: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   required
                 >
                   {plants.map((plant) => (
@@ -850,7 +850,7 @@ export default function DiseasePage() {
                           | "recovered",
                       })
                     }
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   >
                     <option value="ongoing">Ongoing (Active)</option>
                     <option value="treating">Under Treatment</option>
@@ -884,14 +884,14 @@ export default function DiseasePage() {
                 <button
                   type="button"
                   onClick={() => setEditingDisease(null)}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition"
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm"
+                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm cursor-pointer"
                 >
                   Save Changes
                 </button>
@@ -928,7 +928,7 @@ export default function DiseasePage() {
 
               <button
                 onClick={() => setActiveTreatmentDisease(null)}
-                className="p-1.5 rounded-lg text-emerald-200 hover:text-white hover:bg-white/10 transition"
+                className="p-1.5 rounded-lg text-emerald-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1038,7 +1038,7 @@ export default function DiseasePage() {
 
                   <button
                     type="submit"
-                    className="w-full py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white font-semibold text-xs rounded-lg transition shadow-sm flex items-center justify-center gap-1.5 mt-2"
+                    className="w-full py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white font-semibold text-xs rounded-lg transition shadow-sm flex items-center justify-center gap-1.5 mt-2 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Save Treatment to Log
@@ -1050,7 +1050,7 @@ export default function DiseasePage() {
             <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
               <button
                 onClick={() => setActiveTreatmentDisease(null)}
-                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold text-sm rounded-xl transition"
+                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold text-sm rounded-xl transition cursor-pointer"
               >
                 Close
               </button>

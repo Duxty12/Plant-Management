@@ -1,8 +1,9 @@
-import uuid
 from fastapi import APIRouter, Depends
 from backend.database import get_db, run_query
 from backend.schemas import MaintenanceLogIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_id
+
 
 router = APIRouter(
     prefix="/maintenance",
@@ -32,7 +33,7 @@ def list_maintenance(conn=Depends(get_db)):
 
 @router.post("", status_code=201)
 def add_log(log: MaintenanceLogIn, conn=Depends(get_db)):
-    log_id = str(uuid.uuid4())
+    log_id = generate_id(conn, "maintenance_logs", "log_id", "ML-", pad=4)
 
     run_query(
         conn,

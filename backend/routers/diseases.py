@@ -1,8 +1,8 @@
-import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from backend.database import get_db, run_query
 from backend.schemas import DiseaseIn, DiseaseUpdate, TreatmentIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_id
 
 router = APIRouter(
     prefix="/diseases",
@@ -92,7 +92,7 @@ def create_disease(
             detail="Plant not found or not owned by you"
         )
 
-    disease_id = str(uuid.uuid4())
+    disease_id = generate_id(conn, "diseases", "disease_id", "DIS-", pad=4)
 
     heal_date = (
         d.heal_date
@@ -327,7 +327,7 @@ def add_treatment(
             detail="Disease not found or not owned by you"
         )
 
-    treat_id = str(uuid.uuid4())
+    treat_id = generate_id(conn, "treatments", "treat_id", "TRT-", pad=4)
 
     run_query(
         conn,

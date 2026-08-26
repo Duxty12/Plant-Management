@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import { Plus, Pencil, Trash2, Search, Globe, X } from "lucide-react";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -47,7 +46,6 @@ export default function SpeciesPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingSpecies, setEditingSpecies] =
     useState<SpeciesItem | null>(null);
@@ -70,7 +68,6 @@ export default function SpeciesPage() {
     },
   });
 
-
   async function fetchSpecies() {
     try {
       setLoading(true);
@@ -91,7 +88,6 @@ export default function SpeciesPage() {
       }
 
       const data = await response.json();
-
       setSpeciesList(data);
     } catch (err) {
       console.error("Error fetching species:", err);
@@ -131,17 +127,11 @@ export default function SpeciesPage() {
         );
       }
 
-
       setShowAddModal(false);
-
-
       addForm.reset();
-
-
       await fetchSpecies();
     } catch (err) {
       console.error("Error creating species:", err);
-
       setError(
         err instanceof Error
           ? err.message
@@ -152,10 +142,8 @@ export default function SpeciesPage() {
     }
   }
 
-
   function handleOpenEdit(species: SpeciesItem) {
     setEditingSpecies(species);
-
     editForm.reset({
       common_name: species.common_name,
       scientific_name: species.scientific_name || "",
@@ -195,11 +183,9 @@ export default function SpeciesPage() {
       }
 
       setEditingSpecies(null);
-
       await fetchSpecies();
     } catch (err) {
       console.error("Error updating species:", err);
-
       setError(
         err instanceof Error
           ? err.message
@@ -209,7 +195,6 @@ export default function SpeciesPage() {
       setSubmitting(false);
     }
   }
-
 
   async function handleDelete(speciesId: string) {
     const confirmed = window.confirm(
@@ -244,7 +229,6 @@ export default function SpeciesPage() {
       );
     } catch (err) {
       console.error("Error deleting species:", err);
-
       setError(
         err instanceof Error
           ? err.message
@@ -252,7 +236,6 @@ export default function SpeciesPage() {
       );
     }
   }
-
 
   const displayedList = speciesList.filter((species) => {
     const matchesShowAll = showAll
@@ -275,10 +258,8 @@ export default function SpeciesPage() {
     return matchesShowAll && matchesSearch;
   });
 
-
   return (
     <DashboardLayout>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-7">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
@@ -292,10 +273,9 @@ export default function SpeciesPage() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Show All Toggle */}
           <button
             onClick={() => setShowAll(!showAll)}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-semibold border transition ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-semibold border transition cursor-pointer ${
               showAll
                 ? "bg-green-50 border-green-300 text-green-800"
                 : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
@@ -312,14 +292,13 @@ export default function SpeciesPage() {
             )}
           </button>
 
-          {/* Add */}
           <button
             onClick={() => {
               addForm.reset();
               setShowAddModal(true);
               setError("");
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1B3B2C] hover:bg-[#14532d] text-white text-sm font-semibold rounded-lg transition shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-[#1B3B2C] hover:bg-[#14532d] text-white text-sm font-semibold rounded-lg transition shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add Species
@@ -327,14 +306,12 @@ export default function SpeciesPage() {
         </div>
       </div>
 
-      {/* Error */}
       {error && (
         <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
           {error}
         </div>
       )}
 
-      {/* Filter */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-3 mb-4 flex items-center gap-3">
         <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
 
@@ -352,7 +329,6 @@ export default function SpeciesPage() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -377,7 +353,6 @@ export default function SpeciesPage() {
             </thead>
 
             <tbody className="divide-y divide-gray-100">
-              {/* Loading */}
               {loading && (
                 <tr>
                   <td
@@ -389,7 +364,6 @@ export default function SpeciesPage() {
                 </tr>
               )}
 
-              {/* Empty */}
               {!loading && displayedList.length === 0 && (
                 <tr>
                   <td
@@ -401,7 +375,6 @@ export default function SpeciesPage() {
                 </tr>
               )}
 
-              {/* Data */}
               {!loading &&
                 displayedList.map((species) => (
                   <tr
@@ -448,7 +421,7 @@ export default function SpeciesPage() {
                           <button
                             onClick={() => handleOpenEdit(species)}
                             title="Edit Species"
-                            className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition"
+                            className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition cursor-pointer"
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
@@ -456,7 +429,7 @@ export default function SpeciesPage() {
                           <button
                             onClick={() => handleDelete(species.species_id)}
                             title="Delete Species"
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition"
+                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -467,7 +440,6 @@ export default function SpeciesPage() {
                         </span>
                       )}
                     </td>
-
                   </tr>
                 ))}
             </tbody>
@@ -475,14 +447,9 @@ export default function SpeciesPage() {
         </div>
       </div>
 
-      {/* ==================================================
-          ADD SPECIES MODAL
-          ================================================== */}
-
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            {/* Header */}
             <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-gray-900">
@@ -499,20 +466,16 @@ export default function SpeciesPage() {
                   setShowAddModal(false);
                   addForm.reset();
                 }}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Form */}
             <form
-              onSubmit={addForm.handleSubmit(
-                handleAddSpecies
-              )}
+              onSubmit={addForm.handleSubmit(handleAddSpecies)}
               className="p-6 space-y-4"
             >
-              {/* Common Name */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Common Name
@@ -531,15 +494,11 @@ export default function SpeciesPage() {
 
                 {addForm.formState.errors.common_name && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {
-                      addForm.formState.errors.common_name
-                        .message
-                    }
+                    {addForm.formState.errors.common_name.message}
                   </p>
                 )}
               </div>
 
-              {/* Scientific Name */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Scientific Name
@@ -550,25 +509,19 @@ export default function SpeciesPage() {
                   placeholder="e.g. Philodendron erubescens"
                   {...addForm.register("scientific_name")}
                   className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 bg-gray-50 ${
-                    addForm.formState.errors
-                      .scientific_name
+                    addForm.formState.errors.scientific_name
                       ? "border-red-400 focus:ring-red-200"
                       : "border-gray-200 focus:ring-green-200"
                   }`}
                 />
 
-                {addForm.formState.errors
-                  .scientific_name && (
+                {addForm.formState.errors.scientific_name && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {
-                      addForm.formState.errors
-                        .scientific_name.message
-                    }
+                    {addForm.formState.errors.scientific_name.message}
                   </p>
                 )}
               </div>
 
-              {/* Origin */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Origin Country
@@ -579,8 +532,7 @@ export default function SpeciesPage() {
                   placeholder="e.g. Colombia"
                   {...addForm.register("origin_country")}
                   className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 bg-gray-50 ${
-                    addForm.formState.errors
-                      .origin_country
+                    addForm.formState.errors.origin_country
                       ? "border-red-400 focus:ring-red-200"
                       : "border-gray-200 focus:ring-green-200"
                   }`}
@@ -588,15 +540,11 @@ export default function SpeciesPage() {
 
                 {addForm.formState.errors.origin_country && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {
-                      addForm.formState.errors.origin_country
-                        .message
-                    }
+                    {addForm.formState.errors.origin_country.message}
                   </p>
                 )}
               </div>
 
-              {/* Buttons */}
               <div className="pt-2 border-t border-gray-100 flex gap-3">
                 <button
                   type="button"
@@ -605,7 +553,7 @@ export default function SpeciesPage() {
                     addForm.reset();
                   }}
                   disabled={submitting}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -613,11 +561,9 @@ export default function SpeciesPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {submitting
-                    ? "Saving..."
-                    : "Save Species"}
+                  {submitting ? "Saving..." : "Save Species"}
                 </button>
               </div>
             </form>
@@ -625,14 +571,9 @@ export default function SpeciesPage() {
         </div>
       )}
 
-      {/* ==================================================
-          EDIT SPECIES MODAL
-          ================================================== */}
-
       {editingSpecies && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            {/* Header */}
             <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-gray-900">
@@ -649,20 +590,16 @@ export default function SpeciesPage() {
                   setEditingSpecies(null);
                   editForm.reset();
                 }}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Form */}
             <form
-              onSubmit={editForm.handleSubmit(
-                handleSaveEdit
-              )}
+              onSubmit={editForm.handleSubmit(handleSaveEdit)}
               className="p-6 space-y-4"
             >
-              {/* Common Name */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Common Name
@@ -680,15 +617,11 @@ export default function SpeciesPage() {
 
                 {editForm.formState.errors.common_name && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {
-                      editForm.formState.errors.common_name
-                        .message
-                    }
+                    {editForm.formState.errors.common_name.message}
                   </p>
                 )}
               </div>
 
-              {/* Scientific Name */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Scientific Name
@@ -698,25 +631,19 @@ export default function SpeciesPage() {
                   type="text"
                   {...editForm.register("scientific_name")}
                   className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 bg-gray-50 ${
-                    editForm.formState.errors
-                      .scientific_name
+                    editForm.formState.errors.scientific_name
                       ? "border-red-400 focus:ring-red-200"
                       : "border-gray-200 focus:ring-green-200"
                   }`}
                 />
 
-                {editForm.formState.errors
-                  .scientific_name && (
+                {editForm.formState.errors.scientific_name && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {
-                      editForm.formState.errors
-                        .scientific_name.message
-                    }
+                    {editForm.formState.errors.scientific_name.message}
                   </p>
                 )}
               </div>
 
-              {/* Origin */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Origin Country
@@ -726,8 +653,7 @@ export default function SpeciesPage() {
                   type="text"
                   {...editForm.register("origin_country")}
                   className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 bg-gray-50 ${
-                    editForm.formState.errors
-                      .origin_country
+                    editForm.formState.errors.origin_country
                       ? "border-red-400 focus:ring-red-200"
                       : "border-gray-200 focus:ring-green-200"
                   }`}
@@ -735,15 +661,11 @@ export default function SpeciesPage() {
 
                 {editForm.formState.errors.origin_country && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {
-                      editForm.formState.errors.origin_country
-                        .message
-                    }
+                    {editForm.formState.errors.origin_country.message}
                   </p>
                 )}
               </div>
 
-              {/* Buttons */}
               <div className="pt-2 border-t border-gray-100 flex gap-3">
                 <button
                   type="button"
@@ -752,7 +674,7 @@ export default function SpeciesPage() {
                     editForm.reset();
                   }}
                   disabled={submitting}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -760,11 +682,9 @@ export default function SpeciesPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] text-white rounded-xl text-sm font-semibold transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {submitting
-                    ? "Saving..."
-                    : "Save Changes"}
+                  {submitting ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </form>

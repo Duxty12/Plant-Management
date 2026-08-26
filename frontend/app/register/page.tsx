@@ -21,7 +21,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/auth/register", {
+      const response = await fetch("http://localhost:8000/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,6 @@ export default function RegisterPage() {
 
       router.push("/");
     } catch {
-      // Mock success fallback for preview if backend is offline
       router.push("/");
     } finally {
       setLoading(false);
@@ -51,21 +50,16 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0d2618] via-[#1B3B2C] to-[#0a4020]" />
-      {/* Decorative blobs */}
       <div className="absolute top-1/4 -left-24 w-96 h-96 bg-green-600/20 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 -right-24 w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl" />
       <div className="absolute top-3/4 left-1/3 w-64 h-64 bg-green-400/10 rounded-full blur-2xl" />
 
-      {/* Card */}
       <div className="relative w-full max-w-md mx-4 my-8">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          {/* Top accent bar */}
           <div className="h-1.5 bg-gradient-to-r from-green-600 via-emerald-500 to-green-400" />
 
           <div className="px-8 pt-8 pb-10">
-            {/* Logo badge */}
             <div className="flex flex-col items-center mb-6">
               <div className="w-16 h-16 rounded-full bg-[#1B3B2C] flex items-center justify-center mb-3 shadow-lg">
                 <Leaf className="w-8 h-8 text-green-400" />
@@ -75,7 +69,6 @@ export default function RegisterPage() {
             </div>
 
             <form onSubmit={handleRegister} className="space-y-4">
-              {/* Username */}
               <div>
                 <label htmlFor="username" className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Full Name / Username
@@ -94,7 +87,6 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Email Address
@@ -113,7 +105,6 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Password
@@ -132,21 +123,19 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* Error */}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
                   {error}
                 </div>
               )}
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
@@ -166,14 +155,13 @@ export default function RegisterPage() {
               </button>
             </form>
 
-            {/* Sign In Option */}
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
                 <button
                   type="button"
                   onClick={() => router.push("/login")}
-                  className="font-bold text-emerald-700 hover:text-emerald-800 hover:underline transition"
+                  className="font-bold text-emerald-700 hover:text-emerald-800 hover:underline transition cursor-pointer"
                 >
                   Sign In
                 </button>

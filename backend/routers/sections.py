@@ -1,8 +1,8 @@
-import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from backend.database import get_db, run_query
 from backend.schemas import SectionIn
 from backend.dependencies import get_current_user
+from backend.id_generator import generate_id
 
 router = APIRouter(
     prefix="/sections",
@@ -61,7 +61,7 @@ def create_section(
     conn=Depends(get_db),
     user=Depends(get_current_user)
 ):
-    section_id = str(uuid.uuid4())
+    section_id = generate_id(conn, "sections", "section_id", "SEC-A", pad=3)
 
     run_query(
         conn,

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
 import {
   Plus,
   Search,
@@ -12,6 +11,7 @@ import {
   Calendar,
   ClipboardCheck,
 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 type Plant = {
   plant_id: string;
@@ -81,7 +81,6 @@ export default function MaintenancePage() {
       setLogs(maintenanceData);
       setPlants(plantsData);
 
-      // Select first plant automatically
       if (plantsData.length > 0) {
         setForm((prev) => ({
           ...prev,
@@ -144,7 +143,6 @@ export default function MaintenancePage() {
           const error = await response.json();
           errorMessage = error.detail || errorMessage;
         } catch {
-          // Ignore JSON parsing error
         }
 
         throw new Error(errorMessage);
@@ -198,7 +196,6 @@ export default function MaintenancePage() {
           const error = await response.json();
           errorMessage = error.detail || errorMessage;
         } catch {
-          // Ignore JSON parsing error
         }
 
         throw new Error(errorMessage);
@@ -242,7 +239,6 @@ export default function MaintenancePage() {
 
   return (
     <DashboardLayout>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-7">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
@@ -258,16 +254,14 @@ export default function MaintenancePage() {
         <button
           onClick={() => setShowModal(true)}
           disabled={plants.length === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-[#1B3B2C] hover:bg-[#14532d] disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-[#1B3B2C] hover:bg-[#14532d] disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition shadow-sm cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Log New Activity
         </button>
       </div>
 
-      {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        {/* Total Logs */}
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -284,7 +278,6 @@ export default function MaintenancePage() {
           </div>
         </div>
 
-        {/* Plants Maintained */}
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -301,7 +294,6 @@ export default function MaintenancePage() {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -323,7 +315,6 @@ export default function MaintenancePage() {
         </div>
       </div>
 
-      {/* Maintenance Logs */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-wrap gap-3">
           <div className="flex items-center gap-2">
@@ -335,14 +326,13 @@ export default function MaintenancePage() {
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
-            {/* Activity Filter */}
             <div className="flex items-center gap-1.5">
               <Filter className="w-3.5 h-3.5 text-gray-400" />
 
               <select
                 value={activityFilter}
                 onChange={(e) => setActivityFilter(e.target.value)}
-                className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200"
+                className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-200 cursor-pointer"
               >
                 <option value="all">All Activity Types</option>
 
@@ -354,7 +344,6 @@ export default function MaintenancePage() {
               </select>
             </div>
 
-            {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
 
@@ -447,7 +436,7 @@ export default function MaintenancePage() {
                       <button
                         onClick={() => handleDeleteLog(log.log_id)}
                         title="Delete log"
-                        className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition"
+                        className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -460,7 +449,6 @@ export default function MaintenancePage() {
         </div>
       </div>
 
-      {/* Add Maintenance Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
@@ -477,7 +465,7 @@ export default function MaintenancePage() {
 
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -487,7 +475,6 @@ export default function MaintenancePage() {
               onSubmit={handleLogActivity}
               className="p-6 space-y-4"
             >
-              {/* Plant */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Plant Specimen
@@ -501,7 +488,7 @@ export default function MaintenancePage() {
                       plant_id: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-200 bg-gray-50 cursor-pointer"
                   required
                 >
                   <option value="" disabled>
@@ -519,7 +506,6 @@ export default function MaintenancePage() {
                 </select>
               </div>
 
-              {/* Activity */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Activity Type
@@ -540,7 +526,6 @@ export default function MaintenancePage() {
                 />
               </div>
 
-              {/* Date */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Date
@@ -560,7 +545,6 @@ export default function MaintenancePage() {
                 />
               </div>
 
-              {/* Note */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
                   Observations &amp; Note
@@ -580,13 +564,12 @@ export default function MaintenancePage() {
                 />
               </div>
 
-              {/* Buttons */}
               <div className="pt-2 border-t border-gray-100 flex gap-3">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
                   disabled={submitting}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -594,7 +577,7 @@ export default function MaintenancePage() {
                 <button
                   type="submit"
                   disabled={submitting || plants.length === 0}
-                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] disabled:bg-gray-400 text-white rounded-xl text-sm font-semibold transition shadow-sm"
+                  className="flex-1 py-2.5 bg-[#1B3B2C] hover:bg-[#14532d] disabled:bg-gray-400 text-white rounded-xl text-sm font-semibold transition shadow-sm cursor-pointer"
                 >
                   {submitting ? "Saving..." : "Save Log"}
                 </button>
