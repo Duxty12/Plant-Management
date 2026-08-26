@@ -5,11 +5,15 @@ import Link from "next/link";
 import {
   Leaf,
   Heart,
-  Thermometer,
   Droplets,
   ChevronRight,
   CheckCircle2,
   AlertCircle,
+  Sprout,
+  FlaskConical,
+  Wrench,
+  TrendingUp,
+  Bug,
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 
@@ -23,32 +27,92 @@ interface WateringRecord {
   amount: number;
 }
 
+interface ActivityRecord {
+  activity_type: "watering" | "fertilizer" | "maintenance" | "growth" | "disease";
+  activity_id: string;
+  plant_id: string;
+  plant_name: string;
+  date: string;
+  description: string;
+}
+
 interface DashboardData {
   total_plants: number;
   sick_plants: number;
   recent_waterings: WateringRecord[];
+  recent_activity: ActivityRecord[];
 }
 
-interface PlantData {
-  plant_id: string;
-  common_name: string;
-  scientific_name: string;
-  section_name: string | null;
+interface ActivityDisplay {
+  icon: typeof Droplets;
+  iconClass: string;
+  bgClass: string;
+  label: string;
+  labelClass: string;
 }
 
-interface RecentActivity {
-  water_id: string;
-  date: string;
-  plant_id: string;
-  plant_name: string;
-  scientific_name: string;
-  amount: number;
-  section_name: string | null;
+function getActivityDisplay(
+  activityType: ActivityRecord["activity_type"]
+): ActivityDisplay {
+  switch (activityType) {
+    case "watering":
+      return {
+        icon: Droplets,
+        iconClass: "text-blue-600",
+        bgClass: "bg-blue-100",
+        label: "Watering",
+        labelClass: "text-blue-700",
+      };
+
+    case "fertilizer":
+      return {
+        icon: FlaskConical,
+        iconClass: "text-purple-600",
+        bgClass: "bg-purple-100",
+        label: "Fertilizer",
+        labelClass: "text-purple-700",
+      };
+
+    case "maintenance":
+      return {
+        icon: Wrench,
+        iconClass: "text-orange-600",
+        bgClass: "bg-orange-100",
+        label: "Maintenance",
+        labelClass: "text-orange-700",
+      };
+
+    case "growth":
+      return {
+        icon: TrendingUp,
+        iconClass: "text-emerald-600",
+        bgClass: "bg-emerald-100",
+        label: "Growth",
+        labelClass: "text-emerald-700",
+      };
+
+    case "disease":
+      return {
+        icon: Bug,
+        iconClass: "text-red-600",
+        bgClass: "bg-red-100",
+        label: "Disease",
+        labelClass: "text-red-700",
+      };
+
+    default:
+      return {
+        icon: Sprout,
+        iconClass: "text-green-600",
+        bgClass: "bg-green-100",
+        label: "Activity",
+        labelClass: "text-green-700",
+      };
+  }
 }
 
 export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
-  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -89,6 +153,7 @@ export default function DashboardPage() {
           total_plants: Number(data.total_plants || 0),
           sick_plants: Number(data.sick_plants || 0),
           recent_waterings: data.recent_waterings || [],
+          recent_activity: data.recent_activity || [],
         });
       } catch (err) {
         console.error("Failed to fetch dashboard:", err);
@@ -113,100 +178,6 @@ export default function DashboardPage() {
       mounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (!dashboard || dashboard.recent_waterings.length === 0) {
-      setRecentActivities([]);
-      return;
-    }
-
-    let mounted = true;
-
-    const fetchPlantDetails = async () => {
-      try {
-        const uniquePlantIds = Array.from(
-          new Set(
-            dashboard.recent_waterings.map((watering) => watering.plant_id)
-          )
-        );
-
-        const results = await Promise.all(
-          uniquePlantIds.map(async (plantId) => {
-            const response = await fetch(
-              `${API_URL}/plants/${encodeURIComponent(plantId)}`,
-              {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                  Accept: "application/json",
-                },
-                cache: "no-store",
-              }
-            );
-
-            if (!response.ok) {
-              return null;
-            }
-
-            const plant: PlantData = await response.json();
-            return plant;
-          })
-        );
-
-        if (!mounted) {
-          return;
-        }
-
-        const plantMap = new Map<string, PlantData>();
-
-        results.forEach((plant) => {
-          if (plant) {
-            plantMap.set(plant.plant_id, plant);
-          }
-        });
-
-        const activities: RecentActivity[] = dashboard.recent_waterings.map(
-          (watering) => {
-            const plant = plantMap.get(watering.plant_id);
-
-            return {
-              water_id: watering.water_id,
-              date: watering.date,
-              plant_id: watering.plant_id,
-              plant_name: plant?.common_name || watering.plant_id,
-              scientific_name: plant?.scientific_name || "",
-              amount: Number(watering.amount || 0),
-              section_name: plant?.section_name || null,
-            };
-          }
-        );
-
-        setRecentActivities(activities);
-      } catch (err) {
-        console.error("Failed to fetch plant details:", err);
-
-        if (mounted) {
-          setRecentActivities(
-            dashboard.recent_waterings.map((watering) => ({
-              water_id: watering.water_id,
-              date: watering.date,
-              plant_id: watering.plant_id,
-              plant_name: watering.plant_id,
-              scientific_name: "",
-              amount: Number(watering.amount || 0),
-              section_name: null,
-            }))
-          );
-        }
-      }
-    };
-
-    fetchPlantDetails();
-
-    return () => {
-      mounted = false;
-    };
-  }, [dashboard]);
 
   const healthyPlants = useMemo(() => {
     if (!dashboard) {
@@ -420,33 +391,38 @@ export default function DashboardPage() {
 
           {dashboard.recent_waterings.length > 0 ? (
             <div className="space-y-3">
-              {recentActivities.map((activity) => (
-                <div
-                  key={activity.water_id}
-                  className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/70 p-3"
-                >
-                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                    <Droplets className="h-4 w-4 text-blue-600" />
+              {dashboard.recent_waterings.map((watering) => {
+                const activity = dashboard.recent_activity.find(
+                  (item) =>
+                    item.activity_type === "watering" &&
+                    item.activity_id === watering.water_id
+                );
+
+                return (
+                  <div
+                    key={watering.water_id}
+                    className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/70 p-3"
+                  >
+                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                      <Droplets className="h-4 w-4 text-blue-600" />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-gray-800">
+                        {activity?.plant_name || watering.plant_id}
+                      </p>
+
+                      <p className="text-xs text-gray-500">
+                        {Number(watering.amount || 0)} ml
+                      </p>
+                    </div>
+
+                    <span className="whitespace-nowrap rounded-md bg-white px-2 py-1 font-mono text-xs text-gray-500">
+                      {watering.date}
+                    </span>
                   </div>
-
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-gray-800">
-                      {activity.plant_name}
-                    </p>
-
-                    <p className="text-xs text-gray-500">
-                      {activity.amount} ml
-                      {activity.section_name
-                        ? ` · ${activity.section_name}`
-                        : ""}
-                    </p>
-                  </div>
-
-                  <span className="whitespace-nowrap rounded-md bg-white px-2 py-1 font-mono text-xs text-gray-500">
-                    {activity.date}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="py-10 text-center">
@@ -468,7 +444,7 @@ export default function DashboardPage() {
             </h2>
 
             <p className="mt-0.5 text-xs text-gray-400">
-              Latest watering activity from your plants
+              Latest activities recorded for your plants
             </p>
           </div>
 
@@ -482,7 +458,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="overflow-x-auto">
-          {recentActivities.length > 0 ? (
+          {dashboard.recent_activity.length > 0 ? (
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-50">
@@ -491,8 +467,7 @@ export default function DashboardPage() {
                     "Plant",
                     "Plant ID",
                     "Action",
-                    "Amount",
-                    "Section",
+                    "Description",
                   ].map((heading) => (
                     <th
                       key={heading}
@@ -505,54 +480,59 @@ export default function DashboardPage() {
               </thead>
 
               <tbody className="divide-y divide-gray-100">
-                {recentActivities.map((activity) => (
-                  <tr
-                    key={activity.water_id}
-                    className="transition-colors hover:bg-gray-50"
-                  >
-                    <td className="whitespace-nowrap px-5 py-3.5 text-xs font-medium text-gray-500">
-                      {activity.date}
-                    </td>
+                {dashboard.recent_activity.map((activity) => {
+                  const display = getActivityDisplay(activity.activity_type);
+                  const ActivityIcon = display.icon;
 
-                    <td className="px-5 py-3.5">
-                      <p className="text-sm font-semibold text-gray-800">
-                        {activity.plant_name}
-                      </p>
+                  return (
+                    <tr
+                      key={`${activity.activity_type}-${activity.activity_id}`}
+                      className="transition-colors hover:bg-gray-50"
+                    >
+                      <td className="whitespace-nowrap px-5 py-3.5 text-xs font-medium text-gray-500">
+                        {activity.date}
+                      </td>
 
-                      {activity.scientific_name && (
-                        <p className="text-xs italic text-gray-500">
-                          {activity.scientific_name}
+                      <td className="px-5 py-3.5">
+                        <p className="text-sm font-semibold text-gray-800">
+                          {activity.plant_name}
                         </p>
-                      )}
-                    </td>
+                      </td>
 
-                    <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs text-gray-500">
-                        {activity.plant_id}
-                      </span>
-                    </td>
+                      <td className="px-5 py-3.5">
+                        <span className="font-mono text-xs text-gray-500">
+                          {activity.plant_id}
+                        </span>
+                      </td>
 
-                    <td className="px-5 py-3.5">
-                      <span className="flex items-center gap-1.5 text-sm font-medium text-blue-700">
-                        <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                        Watering
-                      </span>
-                    </td>
+                      <td className="px-5 py-3.5">
+                        <span
+                          className={`flex items-center gap-1.5 text-sm font-medium ${display.labelClass}`}
+                        >
+                          <ActivityIcon
+                            className={`h-4 w-4 ${display.iconClass}`}
+                          />
+                          {display.label}
+                        </span>
+                      </td>
 
-                    <td className="px-5 py-3.5 text-sm font-bold text-blue-600">
-                      {activity.amount} ml
-                    </td>
-
-                    <td className="px-5 py-3.5 text-xs text-gray-600">
-                      {activity.section_name || "—"}
-                    </td>
-                  </tr>
-                ))}
+                      <td className="max-w-md px-5 py-3.5">
+                        <span className="text-sm text-gray-600">
+                          {activity.description}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           ) : (
-            <div className="py-12 text-center text-sm italic text-gray-400">
-              No recent plant activities found.
+            <div className="py-12 text-center">
+              <Sprout className="mx-auto mb-3 h-8 w-8 text-gray-300" />
+
+              <p className="text-sm italic text-gray-400">
+                No recent plant activities found.
+              </p>
             </div>
           )}
         </div>
