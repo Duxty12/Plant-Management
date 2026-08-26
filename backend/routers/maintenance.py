@@ -4,19 +4,67 @@ from backend.database import get_db, run_query
 from backend.schemas import MaintenanceLogIn
 from backend.dependencies import get_current_user
 
-router = APIRouter(prefix="/maintenance", tags=["maintenance"])
+router = APIRouter(
+    prefix="/maintenance",
+    tags=["maintenance"],
+    dependencies=[Depends(get_current_user)]
+)
+
+
+@router.get("")
+def list_maintenance(conn=Depends(get_db)):
+    return run_query(
+        conn,
+        """
+        SELECT
+            m.*,
+            sp.common_name AS plant_name
+        FROM maintenance_logs m
+        JOIN plants p
+            ON m.plant_id = p.plant_id
+        JOIN species sp
+            ON p.species_id = sp.species_id
+        ORDER BY m.date DESC
+        """,
+        fetch_all=True
+    )
+
 
 @router.post("", status_code=201)
-def add_log(log: MaintenanceLogIn, conn=Depends(get_db), user=Depends(get_current_user)):
+def add_log(log: MaintenanceLogIn, conn=Depends(get_db)):
     log_id = str(uuid.uuid4())
+
     run_query(
         conn,
-        "INSERT INTO maintenance_logs (log_id, activity_type, date, note, plant_id) VALUES (%s,%s,%s,%s,%s)",
-        (log_id, log.activity_type, log.date, log.note, log.plant_id), commit=True
+        """
+        INSERT INTO maintenance_logs
+            (log_id, plant_id, activity_type, date, note)
+        VALUES
+            (%s, %s, %s, %s, %s)
+        """,
+        (
+            log_id,
+            log.plant_id,
+            log.activity_type,
+            log.date,
+            log.note,
+        ),
+        commit=True
     )
-    return {"log_id": log_id}
 
-@router.get("/{plant_id}")
-def get_logs(plant_id: str, conn=Depends(get_db), user=Depends(get_current_user)):
-    return run_query(conn, "SELECT * FROM maintenance_logs WHERE plant_id=%s ORDER BY date DESC",
-                      (plant_id,), fetch_all=True)
+    return {
+        "log_id": log_id,
+        **log.dict()
+    }
+
+
+@router.delete("/{log_id}")
+def delete_log(log_id: str, conn=Depends(get_db)):
+    run_query(
+        conn,
+        "DELETE FROM maintenance_logs WHERE log_id=%s",
+        (log_id,),
+        commit=True
+    )
+
+    return {"detail": "deleted"}

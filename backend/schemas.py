@@ -7,10 +7,6 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
 
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -20,17 +16,17 @@ class SpeciesIn(BaseModel):
     scientific_name: Optional[str] = None
     origin_country: Optional[str] = None
 
+class SectionIn(BaseModel):
+    section_name: str
+
 class SupplierIn(BaseModel):
     company: str
     email: Optional[str] = None
     phone: Optional[str] = None
     address: Optional[str] = None
 
-class SectionIn(BaseModel):
-    section_name: str
-    env_id: Optional[str] = None
-
 class EnvironmentRecordIn(BaseModel):
+    section_id: str
     date: date
     temperature: float
     humidity: float
@@ -38,10 +34,10 @@ class EnvironmentRecordIn(BaseModel):
 
 class PlantIn(BaseModel):
     species_id: str
+    section_id: Optional[str] = None
     supplier_id: Optional[str] = None
     acquire_date: date
     health_status: str
-    section_id: Optional[str] = None
 
 class WateringIn(BaseModel):
     plant_id: str
@@ -68,15 +64,21 @@ class GrowthRecordIn(BaseModel):
     leaf_count: int
 
 class DiseaseIn(BaseModel):
+    disease_name: str
+    plant_id: str
     detect_date: date
     recovery_status: str = "ongoing"
     heal_date: Optional[date] = None
 
-class SufferingFromIn(BaseModel):
+
+class DiseaseUpdate(BaseModel):
+    disease_name: str
     plant_id: str
-    disease_id: str
+    detect_date: date
+    recovery_status: str
+    heal_date: Optional[date] = None
+
 
 class TreatmentIn(BaseModel):
-    disease_id: str
     medicine: str
     treat_date: date

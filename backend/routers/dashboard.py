@@ -2,14 +2,12 @@ from fastapi import APIRouter, Depends
 from backend.database import get_db, run_query
 from backend.dependencies import get_current_user
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter(prefix="/dashboard", tags=["dashboard"], dependencies=[Depends(get_current_user)])
 
 @router.get("/overview")
 def overview(conn=Depends(get_db), user=Depends(get_current_user)):
-    total_plants = run_query(
-        conn, "SELECT COUNT(*) AS count FROM plants WHERE owner_id=%s",
-        (user["user_id"],), fetch_one=True
-    )["count"]
+    total_plants = run_query(conn, "SELECT COUNT(*) AS count FROM plants WHERE owner_id=%s",
+                              (user["user_id"],), fetch_one=True)["count"]
 
     sick_plants = run_query(
         conn,
@@ -29,14 +27,8 @@ def overview(conn=Depends(get_db), user=Depends(get_current_user)):
         (user["user_id"],), fetch_all=True
     )
 
-    pending_requests = run_query(
-        conn, "SELECT COUNT(*) AS count FROM plant_requests WHERE requested_by=%s AND status='pending'",
-        (user["user_id"],), fetch_one=True
-    )["count"]
-
     return {
         "total_plants": total_plants,
         "sick_plants": sick_plants,
-        "pending_requests": pending_requests,
         "recent_waterings": recent_waterings,
     }

@@ -17,6 +17,7 @@ import {
   LogOut,
   PackagePlus,
 } from "lucide-react";
+import { useAuthStore } from "@/store/authStore";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
@@ -35,6 +36,8 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const user = useAuthStore((state) => state.user);
+
 
   return (
     <aside className="fixed left-0 top-0 h-full w-[250px] bg-[#1B3B2C] flex flex-col z-40 overflow-hidden shadow-lg">
@@ -83,8 +86,8 @@ export default function Sidebar() {
               <span className="text-white text-xs font-bold">ET</span>
             </div>
             <div className="min-w-0">
-              <p className="text-white text-xs font-semibold truncate">Dr. E. Thorne</p>
-              <p className="text-green-400 text-xs truncate">Senior Botanist</p>
+              <p className="text-white text-xs font-semibold truncate">{user?.username}</p>
+              <p className="text-green-400 text-xs truncate">{user?.email}</p>
             </div>
           </div>
           <Link

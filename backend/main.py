@@ -2,10 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.config import FRONTEND_URL
 from backend.routers import (
-    auth, species, suppliers, environments, plants, sections,
-    care, maintenance, growth, diseases, dashboard
+    auth, species, sections, suppliers, environments, plants,
+    care, growth, diseases, maintenance, dashboard
 )
-
 app = FastAPI(title="Exotic Greenhouse Monitoring System")
 
 app.add_middleware(
@@ -16,17 +15,17 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-app.include_router(auth.router)
-app.include_router(species.router)
-app.include_router(suppliers.router)
-app.include_router(environments.router)
-app.include_router(plants.router)
-app.include_router(sections.router)
-app.include_router(care.router)
-app.include_router(maintenance.router)
-app.include_router(growth.router)
-app.include_router(diseases.router)
-app.include_router(dashboard.router)
+app.include_router(auth.router, prefix="/api")
+app.include_router(species.router, prefix="/api")
+app.include_router(sections.router, prefix="/api")
+app.include_router(suppliers.router, prefix="/api")
+app.include_router(environments.router, prefix="/api")
+app.include_router(plants.router, prefix="/api")
+app.include_router(care.router, prefix="/api")
+app.include_router(growth.router, prefix="/api")
+app.include_router(diseases.router, prefix="/api")
+app.include_router(maintenance.router, prefix="/api")
+app.include_router(dashboard.router, prefix="/api")
 
 @app.get("/")
 def root():
